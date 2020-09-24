@@ -19,5 +19,9 @@ public class MapGeneratorEditor : Editor
 		if(GUILayout.Button("Generate")) {
 			mapGen.GenerateMap();
 		}
+
+		if(GUILayout.Button("Spawn Boids")) {
+			mapGen.SpawnBoids();
+		}
 	}
 }

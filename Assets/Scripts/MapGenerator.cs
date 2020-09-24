@@ -30,6 +30,11 @@ public class MapGenerator : MonoBehaviour
 
     public TerrainType[] regions;
 
+    public GameObject boidPrefab;
+    private GameObject[] boids;
+
+    public int numBoids;
+
     public void GenerateMap() {
         float[,] noiseMap = Noise.GenerateHeightMap(mapWidth, mapHeight, seed, noiseScale, octaves, persistence, lacunarity, offset);
 
@@ -58,6 +63,16 @@ public class MapGenerator : MonoBehaviour
         
 	}
 
+    public void SpawnBoids() {
+        for (int i = 0; i < numBoids; i++) {
+            GameObject boid = (GameObject)Instantiate(boidPrefab, new Vector3(600, 70, 600), Quaternion.identity);
+
+            BoidScript script = boid.GetComponent<BoidScript>();
+            script.boids = boids;
+            boids[i] = boid;
+		}
+	}
+
 	private void OnValidate() {
 	    if(mapWidth <= 1) {
             mapWidth = 1;
@@ -76,7 +91,10 @@ public class MapGenerator : MonoBehaviour
 	// Start is called before the first frame update
 	void Start()
     {
-        
+        boids = new GameObject[numBoids];
+
+        GenerateMap();
+        SpawnBoids();
     }
 
     // Update is called once per frame
