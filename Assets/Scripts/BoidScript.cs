@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityStandardAssets.Characters.FirstPerson;
 
 public class BoidScript : MonoBehaviour
 {
@@ -94,17 +95,6 @@ public class BoidScript : MonoBehaviour
 			acceleration += towards * 0.01f;
 		}
 
-		///*
-		//       * Goal speed
-		//       */
-		//Vector3 targetVel = velocity;
-		//      targetVel.Normalize();
-		//      targetVel *= 10f;
-		//      Vector3 goalSpeedForce = targetVel - velocity;
-		//      goalSpeedForce *= 1;
-		//      goalSpeedForce = Vector3.ClampMagnitude(goalSpeedForce, 10);
-		//      acceleration = acceleration + goalSpeedForce;
-
 		// Wander force
 		// If close to wander, find a new one
 		if (Vector3.Distance(transform.position, wander) < 50f) {
@@ -114,10 +104,7 @@ public class BoidScript : MonoBehaviour
 		Vector3 wanderNormal = (wander - transform.position).normalized;
 		acceleration += wanderNormal * 2.2f;
 
-		//Vector3 randVec = new Vector3(random.Next(-1, 1), random.Next(-1, 1), random.Next(-1, 1));
-		//acceleration += randVec * 0.5f;
-
-		velocity = velocity + acceleration * Time.deltaTime;
+		velocity += acceleration * Time.deltaTime;
         transform.position = transform.position + velocity * Time.deltaTime;
 
 		// Rotate boid object

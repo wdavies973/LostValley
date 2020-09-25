@@ -34,7 +34,6 @@ public class ParticleScript : MonoBehaviour
 
         renderer.material.color = new Color((1 - 0.7f) * life + 0.7f, 0.6f * life, 0, 1f - life);
 
-
         velocity += acceleration * Time.deltaTime;
         transform.position += velocity * Time.deltaTime;
 
