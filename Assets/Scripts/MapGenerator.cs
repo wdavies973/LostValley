@@ -64,8 +64,10 @@ public class MapGenerator : MonoBehaviour
 	}
 
     public void SpawnBoids() {
+        System.Random random = new System.Random();
+
         for (int i = 0; i < numBoids; i++) {
-            GameObject boid = (GameObject)Instantiate(boidPrefab, new Vector3(600, 70, 600), Quaternion.identity);
+            GameObject boid = Instantiate(boidPrefab, new Vector3(600 - random.Next(-50, 50), 70 - random.Next(-10, 10), 600 - random.Next(-50, 50)), Quaternion.identity);
 
             BoidScript script = boid.GetComponent<BoidScript>();
             script.boids = boids;

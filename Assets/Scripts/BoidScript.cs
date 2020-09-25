@@ -51,37 +51,38 @@ public class BoidScript : MonoBehaviour
 		for (int i = 0; i < boids.Length; i++) {
 			float dist = Vector3.Distance(transform.position, boids[i].transform.position);
 			if (dist < .01 || dist > 150) continue;
+
 			Vector3 separationForce = (transform.position - boids[i].transform.position).normalized;
-			separationForce *= (1f / Mathf.Pow(dist, 2));
+			separationForce *= (50f / (float)Mathf.Pow(dist, 2));
 			acceleration += separationForce;
 		}
 
 		// Attraction force
 		Vector3 avgPos = new Vector3();
-        int count = 0;
-        for(int i = 0; i < boids.Length; i++) {
-            float dist = Vector3.Distance(transform.position, boids[i].transform.position);
-            if(dist < 100 && dist > 0) {
-                avgPos += boids[i].transform.position;
-                count++;
+		int count = 0;
+		for (int i = 0; i < boids.Length; i++) {
+			float dist = Vector3.Distance(transform.position, boids[i].transform.position);
+			if (dist < 100 && dist > 0) {
+				avgPos += boids[i].transform.position;
+				count++;
 			}
-        }
-        avgPos *= (1.0f / count);
-        if(count >= 1) {
-            Vector3 attractionForce = avgPos - transform.position;
-            attractionForce.Normalize();
-            attractionForce *= 5;
-            Vector3.ClampMagnitude(attractionForce, 50);
-            acceleration += attractionForce;
+		}
+		avgPos *= (1.0f / count);
+		if (count >= 1) {
+			Vector3 attractionForce = avgPos - transform.position;
+			attractionForce.Normalize();
+			attractionForce *= 5;
+			Vector3.ClampMagnitude(attractionForce, 50);
+			acceleration += attractionForce;
 		}
 
 		// Alignment force
 		Vector3 avgVel = new Vector3(0, 0, 0);
 		count = 0;
 		for (int i = 0; i < boids.Length; i++) {
-			float dist = (transform.position - boids[i].transform.position).magnitude;
-			if (dist < 80 && dist > 0) {
-                BoidScript script = scripts[i];
+			float dist = Vector3.Distance(transform.position, boids[i].transform.position);
+			if (dist < 100 && dist > 0) {
+				BoidScript script = scripts[i];
 				avgVel += script.velocity;
 				count++;
 			}
@@ -90,35 +91,41 @@ public class BoidScript : MonoBehaviour
 		if (count >= 1) {
 			Vector3 towards = avgVel - velocity;
 			towards.Normalize();
-			acceleration += towards * 2f;
+			acceleration += towards * 0.01f;
 		}
 
-		/*
-         * Goal speed
-         */
-		Vector3 targetVel = velocity;
-        targetVel.Normalize();
-        targetVel *= 10f;
-        Vector3 goalSpeedForce = targetVel - velocity;
-        goalSpeedForce *= 1;
-        goalSpeedForce = Vector3.ClampMagnitude(goalSpeedForce, 10);
-        acceleration = acceleration + goalSpeedForce;
+		///*
+		//       * Goal speed
+		//       */
+		//Vector3 targetVel = velocity;
+		//      targetVel.Normalize();
+		//      targetVel *= 10f;
+		//      Vector3 goalSpeedForce = targetVel - velocity;
+		//      goalSpeedForce *= 1;
+		//      goalSpeedForce = Vector3.ClampMagnitude(goalSpeedForce, 10);
+		//      acceleration = acceleration + goalSpeedForce;
 
 		// Wander force
-        // If close to wander, find a new one
-        if(Vector3.Distance(transform.position, wander) < 50f) {
-            wander = mountains[random.Next(0, mountains.Length - 1)];
-        }
+		// If close to wander, find a new one
+		if (Vector3.Distance(transform.position, wander) < 50f) {
+			wander = mountains[random.Next(0, mountains.Length - 1)];
+		}
 
-        Vector3 wanderNormal = (wander - transform.position).normalized;
-		acceleration += wanderNormal * 20f;
+		Vector3 wanderNormal = (wander - transform.position).normalized;
+		acceleration += wanderNormal * 1.2f;
 
-		transform.position = transform.position + velocity * Time.deltaTime;
-        velocity = velocity + acceleration * Time.deltaTime;
+		//Vector3 randVec = new Vector3(random.Next(-1, 1), random.Next(-1, 1), random.Next(-1, 1));
+		//acceleration += randVec * 0.5f;
 
-        if(velocity.magnitude > 50) {
+		velocity = velocity + acceleration * Time.deltaTime;
+        transform.position = transform.position + velocity * Time.deltaTime;
+
+		// Rotate boid object
+		transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(velocity), Time.deltaTime * 10f);
+
+        if(velocity.magnitude > 30) {
             velocity.Normalize();
-            velocity *= 50f;
+            velocity *= 30f;
 		}
     }
 }
