@@ -33,6 +33,8 @@ public class MapGenerator : MonoBehaviour
     public GameObject boidPrefab;
     private GameObject[] boids;
 
+    public GameObject particlePrefab;
+
     public int numBoids;
 
     public void GenerateMap() {
@@ -72,6 +74,10 @@ public class MapGenerator : MonoBehaviour
             BoidScript script = boid.GetComponent<BoidScript>();
             script.boids = boids;
             boids[i] = boid;
+		}
+
+        for(int i = 0; i < 200; i++) {
+
 		}
 	}
 

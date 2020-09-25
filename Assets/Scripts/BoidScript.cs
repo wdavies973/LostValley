@@ -112,7 +112,7 @@ public class BoidScript : MonoBehaviour
 		}
 
 		Vector3 wanderNormal = (wander - transform.position).normalized;
-		acceleration += wanderNormal * 1.2f;
+		acceleration += wanderNormal * 2.2f;
 
 		//Vector3 randVec = new Vector3(random.Next(-1, 1), random.Next(-1, 1), random.Next(-1, 1));
 		//acceleration += randVec * 0.5f;
